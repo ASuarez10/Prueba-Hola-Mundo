@@ -14,7 +14,7 @@ phases:
   build:
     commands:
       - cd prueba_git
-      - python main.py
+      - python -m compileall main.py
 
 artifacts:
   files:
