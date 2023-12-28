@@ -15,6 +15,6 @@ phases:
       - cd prueba_git
       - python main.py
 
-  artifacts:
-    files:
-      - '**/*'
+artifacts:
+  files:
+    - '**/*'
