@@ -9,7 +9,7 @@ phases:
   pre_build:
     commands:
       - mkdir prueba_git
-      - aws s3 cp s3://chapinbet-smartplay-build/prueba_git/ ./prueba_git
+      - aws s3 cp s3://chapinbet-smartplay-build/prueba_git/ ./prueba_git --recursive
   
   build:
     commands:
