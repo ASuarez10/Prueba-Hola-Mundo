@@ -29,9 +29,6 @@ pipeline {
             }
         }
 
-        stage('Deploy to CodeDeploy') {
-            
-        }
     }
     
 }
