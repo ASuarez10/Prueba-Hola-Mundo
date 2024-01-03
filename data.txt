@@ -1,1 +1,3 @@
 Data
+
+s3://chapinbet-smartplay-build/Artefactos/prueba_git_artefacto
