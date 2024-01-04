@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: /
+  - source: /prueba_git_artefacto
     destination: /var/www/prueba_git_artefacto
 hooks:
   AfterInstall:
