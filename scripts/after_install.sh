@@ -1,3 +1,4 @@
 #!/bin/bash
 
-sudo pip install
+sudo apt-get update
+sudo apt-get install python
