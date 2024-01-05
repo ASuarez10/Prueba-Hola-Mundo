@@ -34,7 +34,7 @@ pipeline {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: '579464346048', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                         //Inicia el proyecto de codebuild
                         sh "aws codebuild start-build --project-name $CODEBUILD_PROJECT"
-                        sh "aws s3 rm s3://$S3_BUCKET/$S3_RAW_CODE/ --recursive"
+                        //sh "aws s3 rm s3://$S3_BUCKET/$S3_RAW_CODE/ --recursive"
                     }
                 }
             }
