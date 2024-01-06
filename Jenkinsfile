@@ -47,7 +47,7 @@ pipeline {
                         echo "Build ID: $buildId"
                         
                         // Espera hasta que la compilación de CodeBuild haya finalizado
-                        sh "aws codebuild wait build-completed --id $buildId"
+                        sh "aws codebuild wait build-completed --build-id $buildId"
 
                         // Captura el estado de salida de la compilación de CodeBuild
                         def buildStatus = sh(script: "aws codebuild batch-get-builds --build-id $buildId --query 'builds[0].buildStatus' --output text", returnStatus: true).trim()
