@@ -52,6 +52,8 @@ pipeline {
                         // Obtener el estado de la compilación
                             def buildStatus = sh(script: 'aws codebuild batch-get-builds --ids ' + buildId + ' --query "builds[0].buildComplete" --output text', returnStdout: true).trim()
 
+                            echo "Estadp de la compilacion: ${buildStatus}"
+
                             if (buildStatus == 'true') {
                                 echo 'La compilación ha sido completada.'
                                 buildComplete = true
