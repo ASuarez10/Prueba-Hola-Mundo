@@ -40,11 +40,27 @@ pipeline {
                     //Configuracion de credenciales AWS
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: "$AWS_CREDENTIALS_ST", secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
                         //Inicia el proyecto de codebuild
-                        sh "aws codebuild start-build --project-name $CODEBUILD_PROJECT"
-                        //sh "aws s3 rm s3://$S3_BUCKET/$S3_RAW_CODE/ --recursive"
+                        //sh "aws codebuild start-build --project-name $CODEBUILD_PROJECT"
 
-                        //def buildId = sh(script: "aws codebuild start-build --project-name $CODEBUILD_PROJECT --query 'build.id' --output text", returnStdout: true).trim()
-                        //echo "Build ID: $buildId"
+                        def buildId = sh(script: "aws codebuild start-build --project-name $CODEBUILD_PROJECT --query 'build.id' --output text", returnStdout: true).trim()
+                        echo "Build ID: $buildId"
+
+                        def buildComplete = false
+
+                        //Esperar hasta que la compilacion este completa
+                        while (!buildComplete) {
+                        // Obtener el estado de la compilación
+                            def buildStatus = sh(script: 'aws codebuild batch-get-builds --ids ' + buildId + ' --query "builds[0].buildComplete" --output text', returnStdout: true).trim()
+
+                            if (buildStatus == 'true') {
+                                echo 'La compilación ha sido completada.'
+                                buildComplete = true
+                            } else {
+                                echo 'Esperando a que la compilación se complete...'
+                                sleep time: 1, unit: 'SECONDS'  // Ajusta el intervalo de espera según tus necesidades
+                            }
+                        }
+
                         
                         // Espera hasta que la compilación de CodeBuild haya finalizado
                         //sh "aws codebuild wait build-completed --build-id $buildId"
