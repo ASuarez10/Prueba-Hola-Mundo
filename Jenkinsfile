@@ -54,7 +54,7 @@ pipeline {
 
                             echo "Estadp de la compilacion: ${buildStatus}"
 
-                            if (buildStatus == 'true') {
+                            if (buildStatus == 'True') {
                                 echo 'La compilación ha sido completada.'
                                 buildComplete = true
                             } else {
