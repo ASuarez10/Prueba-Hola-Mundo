@@ -76,8 +76,11 @@ pipeline {
                         //Inicia el despliegue
                         //sh "aws deploy create-deployment --application-name $CODEDEPLOY_APPLICATION_NAME --deployment-group-name $CODEDEPLOY_DEPLOYMENT_GROUP --s3-location bucket=$S3_BUCKET,key=$S3_ARTIFACTS/$S3_CODEBUILD_ARTIFACT,bundleType=zip --ignore-application-stop-failures"
                     
-                        def deploymentId = sh(script: "aws deploy create-deployment --application-name $CODEDEPLOY_APPLICATION_NAME --deployment-group-name $CODEDEPLOY_DEPLOYMENT_GROUP --s3-location bucket=$S3_BUCKET,key=$S3_ARTIFACTS/$S3_CODEBUILD_ARTIFACT,bundleType=zip", returnStdout: true).trim()
+                        def deploymentJson = sh(script: "aws deploy create-deployment --application-name $CODEDEPLOY_APPLICATION_NAME --deployment-group-name $CODEDEPLOY_DEPLOYMENT_GROUP --s3-location bucket=$S3_BUCKET,key=$S3_ARTIFACTS/$S3_CODEBUILD_ARTIFACT,bundleType=zip", returnStdout: true).trim()
                     
+                        // Parsea el JSON para obtener el valor de deploymentId
+                        def deploymentId = new groovy.json.JsonSlurper().parseText(deploymentJson).deploymentId
+
                         def deploymentComplete = false
 
                          // Esperar hasta que el despliegue esté completo
