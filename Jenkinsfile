@@ -101,10 +101,10 @@ pipeline {
                             echo "Estado del despliegue: ${deploymentStatus}"
 
                             if (deploymentStatus == 'Succeeded') {
-                                error 'El despliegue ha fallado.'
+                                echo 'El despliegue ha sido completado.'
                                 deploymentComplete = true
                             } else if (deploymentStatus == 'Failed'){
-                                echo 'El despliegue ha sido completado.'
+                                error 'El despliegue ha fallado.'
                                 deploymentComplete = true
                             } else {
                                 echo 'Esperando a que el despliegue se complete...'
