@@ -83,6 +83,8 @@ pipeline {
                          // Esperar hasta que el despliegue esté completo
                         while (!deploymentComplete) {
                             // Obtener información sobre el estado del despliegue
+                            echo "Deployment ID: ${deploymentId}"
+
                             def deploymentStatus = sh(script: 'aws deploy get-deployment --deployment-id ' + deploymentId + ' --query "deploymentInfo.status" --output text', returnStdout: true).trim()
 
                             echo "Estado del despliegue: ${deploymentStatus}"
