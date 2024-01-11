@@ -45,18 +45,26 @@ pipeline {
                         def buildId = sh(script: "aws codebuild start-build --project-name $CODEBUILD_PROJECT --query 'build.id' --output text", returnStdout: true).trim()
                         echo "Build ID: $buildId"
 
-                        def buildComplete = false
+                        def buildStopped = false
 
                         //Esperar hasta que la compilacion este completa
-                        while (!buildComplete) {
+                        while (!buildStopped) {
                         // Obtener el estado de la compilación
-                            def buildStatus = sh(script: 'aws codebuild batch-get-builds --ids ' + buildId + ' --query "builds[0].buildComplete" --output text', returnStdout: true).trim()
+                            def buildComplete = sh(script: 'aws codebuild batch-get-builds --ids ' + buildId + ' --query "builds[0].buildComplete" --output text', returnStdout: true).trim()
 
-                            echo "Estado de la compilacion: ${buildStatus}"
+                            echo "Compilacion completa: ${buildComplete}"
 
-                            if (buildStatus == 'True') {
+                            if (buildComplete == 'True') {
                                 echo 'La compilación ha sido completada.'
-                                buildComplete = true
+                                buildStopped = true
+
+                                def buildStatus = sh(script: 'aws codebuild batch-get-builds --ids ' + buildId + ' --query "builds[0].buildStatus" --output text', returnStdout: true).trim()
+                                echo "Estado de la compilacion: ${buildStatus}"
+
+                                if (buildStatus == 'FAILED'){
+                                    error 'La compilacion ha fallado.'
+                                }
+
                             } else {
                                 echo 'Esperando a que la compilación se complete...'
                                 sleep time: 1, unit: 'SECONDS'  // Ajusta el intervalo de espera según tus necesidades
@@ -92,7 +100,10 @@ pipeline {
 
                             echo "Estado del despliegue: ${deploymentStatus}"
 
-                            if (deploymentStatus == 'Succeeded' || deploymentStatus == 'Failed') {
+                            if (deploymentStatus == 'Succeeded') {
+                                error 'El despliegue ha fallado.'
+                                deploymentComplete = true
+                            } else if (deploymentStatus == 'Failed'){
                                 echo 'El despliegue ha sido completado.'
                                 deploymentComplete = true
                             } else {
